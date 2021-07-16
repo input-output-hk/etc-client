@@ -33,8 +33,9 @@ class NewConsensus(
     * If it is not a valid branch then ExecutingSync has to be informed, otherwise update state with new best branch.
     */
   def updatedBranch(branch: Branch): Unit =
-    if (extendsBestBranch())
+    if (extendsBestBranch()) {
       // just validate the latest block
+    } else {
       if (isHeavierThanBestBranch(branch)) {
         attemptToSetNewBestBranch(branch) match {
           case Right(result) => // save pointer to new best branch
@@ -43,6 +44,7 @@ class NewConsensus(
       } else {
         // nothing
       }
+    }
 
   private def extendsBestBranch(): Boolean = ???
 
