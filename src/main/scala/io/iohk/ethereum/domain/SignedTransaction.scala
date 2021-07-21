@@ -50,22 +50,7 @@ object SignedTransaction {
   val valueForEmptyS = 0
 
   def apply(
-      tx: LegacyTransaction,
-      pointSign: Byte,
-      signatureRandom: ByteString,
-      signature: ByteString,
-      chainId: Byte
-  ): SignedTransaction = {
-    val txSignature = ECDSASignature(
-      r = new BigInteger(1, signatureRandom.toArray),
-      s = new BigInteger(1, signature.toArray),
-      v = pointSign
-    )
-    SignedTransaction(tx, txSignature)
-  }
-
-  def apply(
-      tx: LegacyTransaction,
+      tx: Transaction,
       pointSign: Byte,
       signatureRandom: ByteString,
       signature: ByteString
@@ -79,7 +64,7 @@ object SignedTransaction {
   }
 
   def sign(
-      tx: LegacyTransaction,
+      tx: Transaction,
       keyPair: AsymmetricCipherKeyPair,
       chainId: Option[Byte]
   ): SignedTransaction = {
@@ -165,7 +150,7 @@ object SignedTransaction {
   }
 }
 
-case class SignedTransaction(tx: LegacyTransaction, signature: ECDSASignature) {
+case class SignedTransaction(tx: Transaction, signature: ECDSASignature) {
 
   def safeSenderIsEqualTo(address: Address): Boolean =
     SignedTransaction.getSender(this).contains(address)
